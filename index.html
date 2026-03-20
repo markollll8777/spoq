@@ -243,7 +243,7 @@ async function sendQuery(){
   text.innerHTML='<div class="typing"><span></span><span></span><span></span></div>';
   document.getElementById('spoq-input').value='';
   try{
-    const r=await fetch('https://spoq-kk385lhlu-markollll8777s-projects.vercel.app/api/claude',{
+    const r=await fetch('https://spoq.vercel.app/api/claude',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({query:q,dashboardContext:DASHBOARD_CONTEXT})
