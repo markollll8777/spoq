@@ -232,8 +232,34 @@ function showResponse(html){
   text.innerHTML='<div class="typing"><span></span><span></span><span></span></div>';
   setTimeout(()=>{text.innerHTML=html},1000);
 }
-function sendQuery(){const q=document.getElementById('spoq-input').value.trim();if(!q)return;showResponse(responses[q]||responses.default(q));document.getElementById('spoq-input').value=''}
-function quickQuery(prompt){document.getElementById('spoq-input').value=prompt;showResponse(responses[prompt]||responses.default(prompt))}
+const DASHBOARD_CONTEXT=`Finance Analytics Dashboard Majid Al Futtaim 1ERP. Total Revenue $4.81B up 18.4%. Operating Expenses $2.94B up 6.1% within budget. Net Income YTD $1.87B up 24.3%. EBITDA $2.31B up 21.7%. UAE $1,816,710K +18.8%. KSA $1,411,650K +16.3%. Egypt $842,530K +19.0%. Qatar $450,110K +19.2%. Q1 $1,016,110K. Q2 $1,089,470K. Q3 $1,164,540K. Q4 $1,250,880K. Best month December $498.3M. Best quarter Q4. Fastest growing region Qatar +19.2%. Highest revenue UAE $1.82B.`;
+
+async function sendQuery(){
+  const q=document.getElementById('spoq-input').value.trim();
+  if(!q)return;
+  const panel=document.getElementById('spoq-response');
+  const text=document.getElementById('response-text');
+  panel.classList.add('show');
+  text.innerHTML='<div class="typing"><span></span><span></span><span></span></div>';
+  document.getElementById('spoq-input').value='';
+  try{
+    const r=await fetch('https://spoq-f22600e8i-markollll8777s-projects.vercel.app/api/claude',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({query:q,dashboardContext:DASHBOARD_CONTEXT})
+    });
+    const d=await r.json();
+    if(d.error){text.innerHTML='Error: '+d.error;}
+    else{text.innerHTML=d.answer.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');}
+  }catch(e){
+    text.innerHTML='Could not connect. Please try again.';
+  }
+}
+
+function quickQuery(p){
+  document.getElementById('spoq-input').value=p;
+  sendQuery();
+}
 function quickAgent(a){showResponse(agentResponses[a])}
 function useMic(){document.getElementById('spoq-input').value='What is the best region by revenue growth?';sendQuery()}
 document.getElementById('spoq-input').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendQuery()}});
