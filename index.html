@@ -1,8 +1,13 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1ERP – SPOQ Demo</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',sans-serif;background:#f0f2f5;color:#333}
-.pbi-shell{width:100%;display:flex;flex-direction:column}
+.pbi-shell{width:100%;min-height:100vh;display:flex;flex-direction:column}
 .pbi-topbar{background:#1a1a1a;padding:8px 16px;display:flex;align-items:center;gap:16px}
 .pbi-topbar span{color:#fff;font-size:13px;opacity:0.8}
 .pbi-logo{background:#f2c811;color:#000;font-weight:700;font-size:12px;padding:3px 8px;border-radius:3px}
@@ -36,12 +41,13 @@ th{background:#f5f5f5;padding:6px 8px;text-align:left;color:#555;font-weight:600
 td{padding:5px 8px;border-bottom:1px solid #f0f0f0;color:#333}
 td.pos{color:#1a7a3c}
 .spoq-overlay{position:absolute;top:8px;right:8px;width:290px;background:#fff;border-radius:14px;border:2.5px solid #c8a96e;box-shadow:0 4px 24px rgba(0,0,0,0.18);overflow:hidden;z-index:100}
-.spoq-header{background:#1e2a3a;padding:12px 14px;display:flex;align-items:center;gap:10px}
-.erp-badge{background:#fff;border:1.5px solid #c8a96e;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#8b1a1a;flex-shrink:0}
+.spoq-header{background:#1e2a3a;padding:12px 14px;display:flex;align-items:flex-end;gap:10px}
+.erp-badge{background:#fff;border:1.5px solid #c8a96e;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#8b1a1a;flex-shrink:0;align-self:center}
 .spoq-title{font-size:15px;font-weight:700;color:#fff}
 .spoq-subtitle{font-size:10px;color:#c8a96e;letter-spacing:0.5px;margin-top:2px}
 .spoq-body{padding:12px}
-.spoq-input-wrap{position:relative;margin-bottom:10px}
+.spoq-input-wrap{position:relative;margin-bottom:4px}
+.mic-status{font-size:10px;color:#c0392b;text-align:right;min-height:14px;margin-bottom:6px}
 .spoq-input{width:100%;border:1px solid #ddd;border-radius:6px;padding:8px 36px 8px 10px;font-size:13px;color:#333;resize:none;height:52px;font-family:'Segoe UI',sans-serif}
 .spoq-input:focus{outline:none;border-color:#c8a96e}
 .mic-btn{position:absolute;right:8px;top:8px;background:none;border:none;cursor:pointer;font-size:15px}
@@ -85,7 +91,8 @@ td.pos{color:#1a7a3c}
 .typing span:nth-child(3){animation-delay:0.3s}
 @keyframes bop{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-5px)}}
 </style>
-
+</head>
+<body>
 <div class="pbi-shell">
   <div class="pbi-topbar">
     <span class="pbi-logo">Power BI</span>
@@ -134,22 +141,21 @@ td.pos{color:#1a7a3c}
         </table>
       </div>
 
-      <!-- SPOQ OVERLAY -->
       <div class="spoq-overlay">
         <div class="spoq-header">
-  <div class="erp-badge">1ERP</div>
-  <div style="flex:1">
-    <div class="spoq-title">1ERP – SPOQ</div>
-    <div class="spoq-subtitle">SINGLE POINT OF QUERY</div>
-  </div>
-  <img src="https://raw.githubusercontent.com/markollll8777/spoq/main/SPOQ%20Man2.png" style="height:100px;width:70px;object-fit:cover;object-position:top center;border-radius:4px;margin-right:-14px;margin-bottom:-13px;align-self:flex-end" alt="SPOQ"/>
-</div>
+          <div class="erp-badge">1ERP</div>
+          <div style="flex:1">
+            <div class="spoq-title">1ERP – SPOQ</div>
+            <div class="spoq-subtitle">SINGLE POINT OF QUERY</div>
+          </div>
+          <img src="https://raw.githubusercontent.com/markollll8777/spoq/main/SPOQ%20Man2.png" style="height:100px;width:70px;object-fit:cover;object-position:top center;margin-right:-14px;margin-bottom:-13px;align-self:flex-end" alt="SPOQ"/>
+        </div>
         <div class="spoq-body">
           <div class="spoq-input-wrap">
-            <div id="mic-status" style="font-size:10px;color:#c0392b;text-align:right;min-height:14px;margin-bottom:4px"></div>
             <textarea class="spoq-input" id="spoq-input" placeholder="Enter Query..."></textarea>
-            <button class="mic-btn" onclick="useMic()">🎙</button>
+            <button class="mic-btn" id="mic-btn" onclick="useMic()">🎙</button>
           </div>
+          <div class="mic-status" id="mic-status"></div>
           <div class="spoq-btns">
             <button class="btn-copilot" onclick="sendQuery()">Go to Copilot</button>
             <button class="btn-other" onclick="toggleOptions()">Other Option ▾</button>
@@ -174,18 +180,9 @@ td.pos{color:#1a7a3c}
           </div>
           <div class="qq-label">Quick Queries</div>
           <div class="qq-row">
-            <div class="qq-btn" onclick="quickQuery('What is the best region by revenue growth?')">
-              Best Region
-              <div class="qq-prompt">"What is the best region by revenue growth?"</div>
-            </div>
-            <div class="qq-btn" onclick="quickQuery('What is the best quarter by net income?')">
-              Best Quarter
-              <div class="qq-prompt">"What is the best quarter by net income?"</div>
-            </div>
-            <div class="qq-btn" onclick="quickQuery('What was the best month by revenue?')">
-              Best Month
-              <div class="qq-prompt">"What was the best month by revenue?"</div>
-            </div>
+            <div class="qq-btn" onclick="quickQuery('What is the best region by revenue growth?')">Best Region<div class="qq-prompt">"What is the best region by revenue growth?"</div></div>
+            <div class="qq-btn" onclick="quickQuery('What is the best quarter by net income?')">Best Quarter<div class="qq-prompt">"What is the best quarter by net income?"</div></div>
+            <div class="qq-btn" onclick="quickQuery('What was the best month by revenue?')">Best Month<div class="qq-prompt">"What was the best month by revenue?"</div></div>
           </div>
           <div class="qq-label">Quick Agents</div>
           <div class="qa-row">
@@ -209,31 +206,32 @@ td.pos{color:#1a7a3c}
 
 <script>
 let activeModel='Copilot';
-const responses={
-  'What is the best region by revenue growth?':'Analysing regional performance across 1ERP dataset...<br><br>🏆 <strong>Qatar</strong> is the fastest growing region at <strong>+19.2% YTD</strong>.<br><br>Full ranking:<br>1. Qatar — +19.2% ($450M)<br>2. Egypt — +19.0% ($843M)<br>3. UAE — +18.8% ($1.82B)<br>4. KSA — +16.3% ($1.41B)<br><br>UAE leads in <strong>absolute revenue</strong>. Qatar leads in <strong>growth rate</strong>.',
-  'What is the best quarter by net income?':'Analysing quarterly net income performance...<br><br>🏆 <strong>Q4</strong> is the strongest quarter by net income.<br><br>Full ranking:<br>1. Q4 — $1,250,880 (+22.1% vs Q4 prior year)<br>2. Q3 — $1,164,540 (+19.8%)<br>3. Q2 — $1,089,470 (+17.3%)<br>4. Q1 — $1,016,110 (+14.2%)<br><br>Growth is accelerating <strong>every quarter</strong> — strong upward momentum across all regions.',
-  'What was the best month by revenue?':'Analysing monthly revenue performance across all regions...<br><br>🏆 <strong>December</strong> was the best month by revenue.<br><br>Top 3 months:<br>1. <strong>December</strong> — $498.3M (+22.1% vs prior year)<br>2. <strong>November</strong> — $467.1M (+19.8%)<br>3. <strong>October</strong> — $438.9M (+18.4%)<br><br>Consistent month-on-month growth throughout the year — <strong>every month outperformed prior year</strong>.',
-  'default':function(q){return 'Querying 1ERP via <strong>'+activeModel+'</strong>...<br><br>Analysing: <strong>"'+q+'"</strong><br><br>Revenue tracking at <strong>$4.81B YTD</strong> — up 18.4% year on year. Net Income of <strong>$1.87B</strong> reflects strong margin improvement across all regions. Would you like to drill down further?'}
-};
+let recognition=null;
+let isListening=false;
+
 const agentResponses={
   'Email Query':'✓ <strong>Agent activated.</strong><br>Drafting executive Finance performance summary. Sending to your team via Outlook in 30 seconds.',
   'Contact Suppliers':'✓ <strong>Agent activated.</strong><br>Identified 18 suppliers with overdue invoices. Preparing automated payment reminders. Awaiting your approval before sending.',
   'Run Report':'✓ <strong>Agent activated.</strong><br>Generating full Finance Analytics report. PDF saving to your SharePoint folder in approximately 2 minutes.'
 };
-function toggleOptions(){document.getElementById('ai-options').classList.toggle('show')}
+
+function toggleOptions(){document.getElementById('ai-options').classList.toggle('show');}
+
 function selectAI(model,desc){
   activeModel=model;
   document.getElementById('ai-options').classList.remove('show');
   document.getElementById('response-label').textContent='SPOQ via '+model;
-  showResponse('✓ <strong>'+model+' selected.</strong><br>'+desc+'.<br><br>All queries now routed to <strong>'+model+'</strong>. Type your query or use a Quick Query below.');
+  showResponse('✓ <strong>'+model+' selected.</strong><br>'+desc+'.<br><br>All queries now routed to <strong>'+model+'</strong>.');
 }
+
 function showResponse(html){
   const panel=document.getElementById('spoq-response');
   const text=document.getElementById('response-text');
   panel.classList.add('show');
   text.innerHTML='<div class="typing"><span></span><span></span><span></span></div>';
-  setTimeout(()=>{text.innerHTML=html},1000);
+  setTimeout(()=>{text.innerHTML=html;},1000);
 }
+
 const DASHBOARD_CONTEXT=`Finance Analytics Dashboard Majid Al Futtaim 1ERP. Total Revenue $4.81B up 18.4%. Operating Expenses $2.94B up 6.1% within budget. Net Income YTD $1.87B up 24.3%. EBITDA $2.31B up 21.7%. UAE $1,816,710K +18.8%. KSA $1,411,650K +16.3%. Egypt $842,530K +19.0%. Qatar $450,110K +19.2%. Q1 $1,016,110K. Q2 $1,089,470K. Q3 $1,164,540K. Q4 $1,250,880K. Best month December $498.3M. Best quarter Q4. Fastest growing region Qatar +19.2%. Highest revenue UAE $1.82B.`;
 
 async function sendQuery(){
@@ -252,19 +250,14 @@ async function sendQuery(){
     });
     const d=await r.json();
     if(d.error){text.innerHTML='Error: '+d.error;}
-    else{text.innerHTML=d.answer.replace(/### (.*?)(\n|$)/g,'<strong>$1</strong><br>').replace(/## (.*?)(\n|$)/g,'<strong>$1</strong><br>').replace(/# (.*?)(\n|$)/g,'<strong>$1</strong><br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\|\s*[-:|]+\s*\|[\s\S]*?\n/g,'').replace(/\|(.*?)\|/g,function(m,p1){return p1.trim()+' · '}).replace(/\n/g,'<br>');}
+    else{text.innerHTML=d.answer.replace(/### (.*?)(\n|$)/g,'<strong>$1</strong><br>').replace(/## (.*?)(\n|$)/g,'<strong>$1</strong><br>').replace(/# (.*?)(\n|$)/g,'<strong>$1</strong><br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\|\s*[-:|]+\s*\|[\s\S]*?\n/g,'').replace(/\|(.*?)\|/g,function(m,p1){return p1.trim()+' · ';}).replace(/\n/g,'<br>');}
   }catch(e){
     text.innerHTML='Could not connect. Please try again.';
   }
 }
 
-function quickQuery(p){
-  document.getElementById('spoq-input').value=p;
-  sendQuery();
-}
-function quickAgent(a){showResponse(agentResponses[a])}
-let recognition=null;
-let isListening=false;
+function quickQuery(p){document.getElementById('spoq-input').value=p;sendQuery();}
+function quickAgent(a){showResponse(agentResponses[a]);}
 
 function setupMic(){
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
@@ -273,16 +266,31 @@ function setupMic(){
   recognition.continuous=false;
   recognition.interimResults=true;
   recognition.lang='en-US';
-  recognition.onstart=function(){isListening=true;document.getElementById('mic-btn').textContent='🔴';const ms=document.getElementById('mic-status');if(ms)ms.textContent='Listening... speak now';
-  recognition.onresult=function(e){let interim='',final='';for(let i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal)final+=e.results[i][0].transcript;else interim+=e.results[i][0].transcript;}document.getElementById('spoq-input').value=final||interim;if(final){setTimeout(()=>{sendQuery();},600);}};
-  recognition.onerror=function(e){stopMic();};
+  recognition.onstart=function(){
+    isListening=true;
+    document.getElementById('mic-btn').textContent='🔴';
+    const ms=document.getElementById('mic-status');
+    if(ms)ms.textContent='Listening... speak now';
+  };
+  recognition.onresult=function(e){
+    let interim='',final='';
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      if(e.results[i].isFinal)final+=e.results[i][0].transcript;
+      else interim+=e.results[i][0].transcript;
+    }
+    document.getElementById('spoq-input').value=final||interim;
+    if(final){setTimeout(()=>{sendQuery();},600);}
+  };
+  recognition.onerror=function(){stopMic();};
   recognition.onend=function(){stopMic();};
 }
 
 function stopMic(){
   isListening=false;
-  document.getElementById('mic-btn').textContent='🎙';
-  const ms2=document.getElementById('mic-status');if(ms2)ms2.textContent='';
+  const btn=document.getElementById('mic-btn');
+  if(btn)btn.textContent='🎙';
+  const ms=document.getElementById('mic-status');
+  if(ms)ms.textContent='';
 }
 
 function toggleMic(){
@@ -293,5 +301,10 @@ function toggleMic(){
 }
 
 function useMic(){toggleMic();}
-document.getElementById('spoq-input').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendQuery()}});
+
+document.getElementById('spoq-input').addEventListener('keydown',function(e){
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendQuery();}
+});
 </script>
+</body>
+</html>
