@@ -260,7 +260,7 @@ function quickQuery(p){document.getElementById('spoq-input').value=p;sendQuery()
 function quickAgent(a){showResponse(agentResponses[a]);}
 
 function setupMic(){
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition||window.msSpeechRecognition;
   if(!SR){return;}
   recognition=new SR();
   recognition.continuous=false;
@@ -295,9 +295,9 @@ function stopMic(){
 
 function toggleMic(){
   if(!recognition)setupMic();
-  if(!recognition)return;
+  if(!recognition){alert('Voice input is not supported in this browser. Please type your query instead.');return;}
   if(isListening){recognition.stop();}
-  else{document.getElementById('spoq-input').value='';recognition.start();}
+  else{document.getElementById('spoq-input').value='';try{recognition.start();}catch(e){stopMic();}}
 }
 
 function useMic(){toggleMic();}
