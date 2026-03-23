@@ -146,6 +146,7 @@ td.pos{color:#1a7a3c}
 </div>
         <div class="spoq-body">
           <div class="spoq-input-wrap">
+            <div id="mic-status" style="font-size:10px;color:#c0392b;text-align:right;min-height:14px;margin-bottom:4px"></div>
             <textarea class="spoq-input" id="spoq-input" placeholder="Enter Query..."></textarea>
             <button class="mic-btn" onclick="useMic()">🎙</button>
           </div>
@@ -272,7 +273,7 @@ function setupMic(){
   recognition.continuous=false;
   recognition.interimResults=true;
   recognition.lang='en-US';
-  recognition.onstart=function(){isListening=true;document.getElementById('mic-btn').textContent='🔴';document.getElementById('mic-status').textContent='Listening... speak now';};
+  recognition.onstart=function(){isListening=true;document.getElementById('mic-btn').textContent='🔴';const ms=document.getElementById('mic-status');if(ms)ms.textContent='Listening... speak now';
   recognition.onresult=function(e){let interim='',final='';for(let i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal)final+=e.results[i][0].transcript;else interim+=e.results[i][0].transcript;}document.getElementById('spoq-input').value=final||interim;if(final){setTimeout(()=>{sendQuery();},600);}};
   recognition.onerror=function(e){stopMic();};
   recognition.onend=function(){stopMic();};
@@ -281,7 +282,7 @@ function setupMic(){
 function stopMic(){
   isListening=false;
   document.getElementById('mic-btn').textContent='🎙';
-  document.getElementById('mic-status').textContent='';
+  const ms2=document.getElementById('mic-status');if(ms2)ms2.textContent='';
 }
 
 function toggleMic(){
