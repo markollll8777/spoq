@@ -262,6 +262,6 @@ function quickQuery(p){
   sendQuery();
 }
 function quickAgent(a){showResponse(agentResponses[a])}
-function useMic(){document.getElementById('spoq-input').value='What is the best region by revenue growth?';sendQuery()}
+function useMic(){toggleMic();}
 document.getElementById('spoq-input').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendQuery()}});
 </script>
