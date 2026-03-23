@@ -297,7 +297,7 @@ function toggleMic(){
   if(!recognition)setupMic();
   if(!recognition){alert('Voice input is not supported in this browser. Please type your query instead.');return;}
   if(isListening){recognition.stop();}
-  else{document.getElementById('spoq-input').value='';try{recognition.start();}catch(e){stopMic();}}
+  else{document.getElementById('spoq-input').value='';setTimeout(()=>{try{recognition.start();}catch(e){stopMic();}},200);}
 }
 
 function useMic(){toggleMic();}
