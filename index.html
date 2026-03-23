@@ -262,6 +262,35 @@ function quickQuery(p){
   sendQuery();
 }
 function quickAgent(a){showResponse(agentResponses[a])}
+let recognition=null;
+let isListening=false;
+
+function setupMic(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){return;}
+  recognition=new SR();
+  recognition.continuous=false;
+  recognition.interimResults=true;
+  recognition.lang='en-US';
+  recognition.onstart=function(){isListening=true;document.getElementById('mic-btn').textContent='🔴';document.getElementById('mic-status').textContent='Listening... speak now';};
+  recognition.onresult=function(e){let interim='',final='';for(let i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal)final+=e.results[i][0].transcript;else interim+=e.results[i][0].transcript;}document.getElementById('spoq-input').value=final||interim;if(final){setTimeout(()=>{sendQuery();},600);}};
+  recognition.onerror=function(e){stopMic();};
+  recognition.onend=function(){stopMic();};
+}
+
+function stopMic(){
+  isListening=false;
+  document.getElementById('mic-btn').textContent='🎙';
+  document.getElementById('mic-status').textContent='';
+}
+
+function toggleMic(){
+  if(!recognition)setupMic();
+  if(!recognition)return;
+  if(isListening){recognition.stop();}
+  else{document.getElementById('spoq-input').value='';recognition.start();}
+}
+
 function useMic(){toggleMic();}
 document.getElementById('spoq-input').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendQuery()}});
 </script>
